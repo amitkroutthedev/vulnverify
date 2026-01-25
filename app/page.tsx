@@ -152,39 +152,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Visual Demo */}
-      {/* <section className="pb-24 px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-gray-50 rounded-lg p-8 border border-gray-200">
-            <div className="grid md:grid-cols-2 gap-8">
-              <div>
-                <div className="text-xs font-medium text-gray-500 mb-4 uppercase tracking-wide">Before</div>
-                <div className="bg-white rounded-md p-6 border border-gray-200">
-                  <div className="space-y-3 text-sm font-mono text-gray-600">
-                    <div className="text-red-600">CVE-2024-1234</div>
-                    <div className="text-xs leading-relaxed">Buffer overflow vulnerability in network processing component allows remote attackers to execute arbitrary code via crafted packets...</div>
-                    <div className="text-red-700 font-semibold text-xs">CVSS Score: 9.8 CRITICAL</div>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <div className="text-xs font-medium text-gray-500 mb-4 uppercase tracking-wide">After</div>
-                <div className="bg-white rounded-md p-6 border border-blue-200">
-                  <div className="space-y-3 text-sm text-gray-700 leading-relaxed">
-                    <p className="font-medium text-gray-900">Impact on your system:</p>
-                    <p>This vulnerability affects your Nginx 1.22.0 container. Immediate action required.</p>
-                    <p className="font-medium text-gray-900 mt-4">Recommended fix:</p>
-                    <div className="bg-gray-50 rounded p-3 font-mono text-xs text-gray-800 border border-gray-200">
-                      apt-get update && apt-get install nginx=1.24.0
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section> */}
-
       {/* Value Proposition */}
       <section className="py-24 px-6 lg:px-8 bg-gray-50" id="features">
         <div className="max-w-6xl mx-auto">
@@ -250,8 +217,8 @@ export default function Home() {
             />
             <FeatureCard 
               icon={<Shield className="w-6 h-6" strokeWidth={1.5} />}
-              title="Real-time intelligence"
-              description="Connected to major vulnerability databases. Stay informed about emerging threats as they're disclosed."
+              title="AI-powered analysis"
+              description="Powered by advanced AI models to analyze and explain vulnerabilities in plain language."
             />
           </div>
         </div>
@@ -266,12 +233,12 @@ export default function Home() {
             <StepCard 
               number="1" 
               title="Input" 
-              description="Provide a CVE identifier, security log excerpt, or dependency information through our interface or API."
+              description="Provide a CVE identifier, security log excerpt, or dependency information through our chat interface."
             />
             <StepCard 
               number="2" 
               title="Analysis" 
-              description="Our AI cross-references threats against global databases and your specific infrastructure context."
+              description="Our AI analyzes threats using your specific tech stack context to provide tailored security insights."
             />
             <StepCard 
               number="3" 
@@ -348,7 +315,7 @@ export default function Home() {
   );
 }
 
-function FeatureCard({ icon, title, description }) {
+function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
   return (
     <div>
       <div className="text-blue-600 mb-4">{icon}</div>
@@ -358,7 +325,7 @@ function FeatureCard({ icon, title, description }) {
   );
 }
 
-function StepCard({ number, title, description }) {
+function StepCard({ number, title, description }: { number: string, title: string, description: string }) {
   return (
     <div>
       <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-lg font-medium mb-4 text-white">

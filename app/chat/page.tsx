@@ -57,6 +57,13 @@ export default function OpenChat() {
   // Network speed detection
   const [networkSpeed, setNetworkSpeed] = useState<NetworkInfo>(() => detectNetworkSpeed());
   
+  // Redirect to /openchat if no techStack and no chatId
+  useEffect(() => {
+    if (isLoaded && !searchParams.get("techStack") && !urlChatId) {
+      router.push('/openchat');
+    }
+  }, [isLoaded, searchParams, urlChatId, router]);
+  
   // Monitor network speed changes
   useEffect(() => {
     const connection = (navigator as any).connection;
