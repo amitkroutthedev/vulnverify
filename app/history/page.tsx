@@ -3,7 +3,7 @@ import { UserButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 
 interface Chat {
   id: string;
@@ -20,7 +20,7 @@ interface Message {
   created_at: string;
 }
 
-function History() {
+function HistoryContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { isLoaded, isSignedIn, user } = useUser();
@@ -259,4 +259,34 @@ function History() {
   );
 }
 
-export default History;
+// Loading fallback component
+function HistoryLoadingFallback() {
+  return (
+    <div className="min-h-screen bg-white">
+      <header className="h-16 flex items-center justify-between px-6 border-b border-gray-200">
+        <div className="flex items-center space-x-2">
+          <div className="w-5 h-5 bg-gray-200 rounded animate-pulse" />
+          <div className="w-24 h-5 bg-gray-200 rounded animate-pulse" />
+        </div>
+        <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse" />
+      </header>
+      <section className="mx-auto max-w-4xl px-6 py-16 lg:px-8">
+        <div className="w-32 h-4 bg-gray-200 rounded animate-pulse mb-6" />
+        <div className="w-48 h-10 bg-gray-200 rounded animate-pulse mb-8" />
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-20 bg-gray-100 rounded-lg animate-pulse" />
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+export default function History() {
+  return (
+    <Suspense fallback={<HistoryLoadingFallback />}>
+      <HistoryContent />
+    </Suspense>
+  );
+}

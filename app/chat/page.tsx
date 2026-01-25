@@ -2,7 +2,7 @@
 
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { UserButton, useUser } from "@clerk/nextjs";
@@ -41,7 +41,7 @@ function detectNetworkSpeed(): NetworkInfo {
   return { speed: 'medium' };
 }
 
-export default function OpenChat() {
+function OpenChatContent() {
   const { user, isLoaded } = useUser();
   const [input, setInput] = useState("");
   const [chatId, setChatId] = useState<string | null>(null);
@@ -473,4 +473,35 @@ export default function OpenChat() {
       </div>
     </div>
   );
-}    
+}
+
+// Loading fallback component
+function ChatLoadingFallback() {
+  return (
+    <div className="flex h-screen flex-col bg-white">
+      <header className="border-b border-gray-200 bg-white px-6 py-4">
+        <div className="mx-auto flex max-w-4xl items-center justify-between">
+          <div className="flex items-center gap-6">
+            <div className="h-8 w-16 animate-pulse rounded bg-gray-200" />
+            <div className="h-8 w-32 animate-pulse rounded bg-gray-200" />
+          </div>
+          <div className="h-8 w-8 animate-pulse rounded-full bg-gray-200" />
+        </div>
+      </header>
+      <div className="flex-1 flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent mx-auto mb-4" />
+          <p className="text-gray-600">Loading chat...</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default function OpenChat() {
+  return (
+    <Suspense fallback={<ChatLoadingFallback />}>
+      <OpenChatContent />
+    </Suspense>
+  );
+}

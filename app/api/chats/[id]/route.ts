@@ -5,11 +5,11 @@ import { pool } from '@/lib/db';
 // GET - Fetch a single chat by ID
 export async function GET(
     req: NextRequest,
-    { params }: { params: Promise<{ chatId: string }> }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const user = await currentUser()
-        const { chatId } = await params;
+        const { id } = await params;
 
         const currUserId = user?.id
 
@@ -21,7 +21,7 @@ export async function GET(
             `SELECT id, title, tech_stack, created_at, updated_at 
        FROM chats 
        WHERE id = $1 AND user_id = $2`,
-            [chatId, currUserId]
+            [id, currUserId]
         );
 
         if (result.rows.length === 0) {
