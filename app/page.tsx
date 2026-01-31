@@ -1,14 +1,12 @@
 'use client'
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton,useAuth } from "@clerk/nextjs";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Shield, Zap, Target, Code, Menu, X, ArrowRight } from 'lucide-react';
+import { Shield, Zap, Target, ArrowRight, Filter, Route } from 'lucide-react';
 
 export default function Home() {
   const currentUser = useAuth()
   const [isScrolled, setIsScrolled] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isSavingUser, setIsSavingUser] = useState(false);
 
   useEffect(() => {
@@ -42,45 +40,7 @@ export default function Home() {
       saveUserHandler()
     }
   },[currentUser.isSignedIn])
- /* return (
-    <div>
-      <nav className="border-b border-[#002829]/20 bg-white/90 backdrop-blur-sm">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center">
-              <Link href="/" className="text-xl font-bold text-[#1b3a4b]">
-                CVE Chat
-              </Link>
-            </div>
-            <div className="flex items-center gap-4">
-              <SignedOut>
-                <SignInButton mode="modal">
-                  <button className="rounded-lg px-4 py-2 text-sm font-medium text-[#1b3a4b] transition-colors hover:bg-[#006466]/10">
-                    Sign In
-                  </button>
-                </SignInButton>
-                <SignUpButton mode="modal">
-                  <button className="rounded-lg bg-[#006466] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#005052]">
-                    Get Started
-                  </button>
-                </SignUpButton>
-              </SignedOut>
-              <SignedIn>
-                <Link
-                  href="/dashboard"
-                  className="rounded-lg bg-[#006466] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[#005052]"
-                >
-                  Go to App
-                </Link>
-                <UserButton />
-              </SignedIn>
-            </div>
-          </div>
-        </div>
-      </nav>
 
-    </div>
-     );*/
  return (
     <div className="bg-white text-gray-900 min-h-screen">
       {/* Loading Overlay */}
@@ -99,13 +59,11 @@ export default function Home() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
               <Shield className="w-6 h-6 text-blue-600" strokeWidth={2} />
-              <span className="text-lg font-medium text-gray-900">VulnVerify</span>
+              <span className="text-lg font-medium text-gray-900">Clariseque</span>
             </div>
             
             <div className="flex items-center space-x-8">
-              {/* <a href="#features" className="text-sm text-gray-700 hover:text-gray-900 transition-colors">Features</a> */}
-              {/* <a href="#api" className="text-sm text-gray-700 hover:text-gray-900 transition-colors">API</a> */}
-              {/* <a href="#docs" className="text-sm text-gray-700 hover:text-gray-900 transition-colors">Documentation</a> */}
+              <Link href="/about" className="text-sm text-gray-700 hover:text-gray-900 transition-colors">About</Link>
               <SignedOut>
                 <SignInButton mode="modal">
                   <button className="text-sm text-gray-700 hover:text-gray-900 transition-colors">
@@ -148,14 +106,14 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-24 px-6 lg:px-8">
+      <section className="pt-32 pb-24 px-6 lg:px-8 font-sans">
         <div className="max-w-6xl mx-auto">
           <div className="max-w-4xl">
             <h1 className="text-5xl md:text-6xl font-normal mb-6 leading-tight text-gray-900 tracking-tight">
-              The AI-powered platform that transforms vulnerability management
+              Clariseque
             </h1>
             <p className="text-xl text-gray-600 mb-8 leading-relaxed font-light max-w-3xl">
-              VulnVerify translates complex CVE data into clear, actionable insights. Get instant answers about security threats and remediation steps tailored to your infrastructure.
+              From Data to Decisiveness: AI-Driven Vulnerability Intelligence.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href={"/dashboard"} className="bg-blue-600 text-white px-6 py-3 rounded-md text-base font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center gap-2">
@@ -166,162 +124,180 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Value Proposition */}
-      <section className="py-24 px-6 lg:px-8 bg-gray-50" id="features">
+      {/* Value Pillars */}
+      <section className="font-sans py-24 px-6 lg:px-8" id="features">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-16">
-            <div>
-              <h2 className="text-3xl font-normal mb-6 text-gray-900">The challenge</h2>
-              <div className="space-y-6">
-                <div>
-                  <h3 className="font-medium text-gray-900 mb-2">Information overload</h3>
-                  <p className="text-gray-600 leading-relaxed">Security advisories are often technical, vague, or outdated. Teams waste valuable time deciphering what actually matters.</p>
-                </div>
-                <div>
-                  <h3 className="font-medium text-gray-900 mb-2">Alert fatigue</h3>
-                  <p className="text-gray-600 leading-relaxed">Not every CVE impacts your stack. Hours spent investigating false positives delay real security work.</p>
-                </div>
-                <div>
-                  <h3 className="font-medium text-gray-900 mb-2">Slow response times</h3>
-                  <p className="text-gray-600 leading-relaxed">Finding the right patch across vendor documentation and community forums creates unnecessary delays.</p>
-                </div>
+          <h2 className="text-3xl font-normal mb-16 text-gray-900 text-center">Why Clariseque</h2>
+          <div className="grid md:grid-cols-3 gap-12">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Target className="w-8 h-8 text-blue-600" strokeWidth={1.5} />
               </div>
+              <h3 className="text-xl font-medium text-gray-900 mb-4">Intelligent Prioritization</h3>
+              <p className="text-gray-600 leading-relaxed font-mono">
+                We don't just list threats; our AI analyzes the context of your environment to tell you what matters most, right now.
+              </p>
             </div>
-
-            <div>
-              <h2 className="text-3xl font-normal mb-6 text-gray-900">Our approach</h2>
-              <div className="space-y-6">
-                <div>
-                  <h3 className="font-medium text-gray-900 mb-2">Plain language explanations</h3>
-                  <p className="text-gray-600 leading-relaxed">AI translates technical security language into clear, actionable information your entire team can understand.</p>
-                </div>
-                <div>
-                  <h3 className="font-medium text-gray-900 mb-2">Context-aware analysis</h3>
-                  <p className="text-gray-600 leading-relaxed">Provide your tech stack details and receive precise impact assessments. Know immediately if you're affected.</p>
-                </div>
-                <div>
-                  <h3 className="font-medium text-gray-900 mb-2">Direct remediation guidance</h3>
-                  <p className="text-gray-600 leading-relaxed">Get specific commands and configuration changes. No searching required—just implement and move forward.</p>
-                </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Zap className="w-8 h-8 text-blue-600" strokeWidth={1.5} />
               </div>
+              <h3 className="text-xl font-medium text-gray-900 mb-4">Actionable Remediation</h3>
+              <p className="text-gray-600 leading-relaxed font-mono">
+                Move beyond "what" is broken to "how" to fix it with clear, step-by-step guidance for every identified CVE.
+              </p>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Key Features */}
-      <section className="py-24 px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-normal mb-16 text-gray-900">Built for security teams</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <FeatureCard 
-              icon={<Zap className="w-6 h-6" strokeWidth={1.5} />}
-              title="Conversational interface"
-              description="Ask questions in natural language and receive direct answers without navigating multiple documentation sources."
-            />
-            <FeatureCard 
-              icon={<Target className="w-6 h-6" strokeWidth={1.5} />}
-              title="Actionable remediation"
-              description="Receive specific commands, patches, and configuration changes ready to implement immediately."
-            />
-            <FeatureCard 
-              icon={<Code className="w-6 h-6" strokeWidth={1.5} />}
-              title="Stack awareness"
-              description="Filter vulnerabilities based on your specific operating systems, libraries, and dependency versions."
-            />
-            <FeatureCard 
-              icon={<Shield className="w-6 h-6" strokeWidth={1.5} />}
-              title="AI-powered analysis"
-              description="Powered by advanced AI models to analyze and explain vulnerabilities in plain language."
-            />
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Shield className="w-8 h-8 text-blue-600" strokeWidth={1.5} />
+              </div>
+              <h3 className="text-xl font-medium text-gray-900 mb-4">Enterprise-Ready Clarity</h3>
+              <p className="text-gray-600 leading-relaxed font-mono">
+                Built to be accessible for stakeholders and precise for engineers, ensuring everyone is on the same page.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* How It Works */}
-      <section className="py-24 px-6 lg:px-8 bg-gray-50">
+      <section className="font-sans py-24 px-6 lg:px-8 bg-gray-50" id="how-it-works">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-normal mb-16 text-gray-900">How it works</h2>
+          <h2 className="text-3xl font-normal mb-6 text-gray-900 text-center">How It Works</h2>
+          <p className="text-lg text-gray-600 text-center mb-16 max-w-3xl mx-auto">
+            Get tailored vulnerability insights in three simple steps.
+          </p>
           
-          <div className="grid md:grid-cols-3 gap-12">
-            <StepCard 
-              number="1" 
-              title="Input" 
-              description="Provide a CVE identifier, security log excerpt, or dependency information through our chat interface."
-            />
-            <StepCard 
-              number="2" 
-              title="Analysis" 
-              description="Our AI analyzes threats using your specific tech stack context to provide tailored security insights."
-            />
-            <StepCard 
-              number="3" 
-              title="Resolution" 
-              description="Receive clear summaries, risk assessments, and exact remediation steps in plain language."
-            />
+          <div className="space-y-16">
+            {/* Step 1 - Select Tech Stack */}
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <Filter className="w-6 h-6 text-white" strokeWidth={2} />
+                  </div>
+                  <span className="text-sm font-medium text-blue-600 uppercase tracking-wide">Step 1</span>
+                </div>
+                <h3 className="text-2xl font-medium text-gray-900 mb-4">Define Your Tech Stack</h3>
+                <p className="text-gray-600 leading-relaxed font-mono ">
+                  Start by selecting the technologies your project uses—frameworks, databases, servers, and libraries. This context allows Clariseque to provide vulnerability analysis that's specific to your environment, not generic advice.
+                </p>
+              </div>
+              <div className="bg-white rounded-xl border border-gray-200 p-8">
+                <div className="text-sm font-medium text-gray-900 mb-4">Select Your Stack</div>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-md">Next.js</span>
+                  <span className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-md">PostgreSQL</span>
+                  <span className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-md">Node.js</span>
+                  <span className="px-3 py-1.5 bg-gray-100 text-gray-600 text-sm rounded-md border border-gray-200">React</span>
+                  <span className="px-3 py-1.5 bg-gray-100 text-gray-600 text-sm rounded-md border border-gray-200">Docker</span>
+                  <span className="px-3 py-1.5 bg-gray-100 text-gray-600 text-sm rounded-md border border-gray-200">Redis</span>
+                  <span className="px-3 py-1.5 bg-gray-100 text-gray-600 text-sm rounded-md border border-gray-200">AWS</span>
+                  <span className="px-3 py-1.5 bg-gray-100 text-gray-600 text-sm rounded-md border border-gray-200">MongoDB</span>
+                </div>
+                <p className="text-xs text-gray-500 mt-4">+ Add custom technologies</p>
+              </div>
+            </div>
+
+            {/* Step 2 - Ask Questions */}
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div className="order-2 md:order-1 bg-white rounded-xl border border-gray-200 p-8">
+                <div className="space-y-4">
+                  <div className="text-sm font-medium text-gray-900 mb-2">Chat</div>
+                  <div className="bg-gray-50 rounded-lg p-3">
+                    <p className="text-sm text-gray-700">"Is CVE-2024-21626 affecting my stack? How do I fix it?"</p>
+                  </div>
+                  <div className="bg-gray-50 rounded-lg p-3">
+                    <p className="text-sm text-gray-700">"What are the XSS vulnerabilities in Next.js 14?"</p>
+                  </div>
+                  <div className="bg-gray-50 rounded-lg p-3">
+                    <p className="text-sm text-gray-700">"How do I secure my PostgreSQL connection?"</p>
+                  </div>
+                  <div className="flex items-center gap-2 pt-2">
+                    <div className="flex-1 bg-gray-100 rounded-md px-3 py-2 text-sm text-gray-400">
+                      Ask about any CVE or security concern...
+                    </div>
+                    <div className="w-8 h-8 bg-blue-600 rounded-md flex items-center justify-center">
+                      <ArrowRight className="w-4 h-4 text-white" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="order-1 md:order-2">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <Target className="w-6 h-6 text-white" strokeWidth={2} />
+                  </div>
+                  <span className="text-sm font-medium text-blue-600 uppercase tracking-wide">Step 2</span>
+                </div>
+                <h3 className="text-2xl font-medium text-gray-900 mb-4">Ask About CVEs & Security</h3>
+                <p className="text-gray-600 leading-relaxed font-mono">
+                  Enter a CVE number, paste vulnerability code, or ask any security question. Our conversational AI understands natural language—ask the way you'd ask a security expert colleague.
+                </p>
+              </div>
+            </div>
+
+            {/* Step 3 - Get Tailored Solutions */}
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <Route className="w-6 h-6 text-white" strokeWidth={2} />
+                  </div>
+                  <span className="text-sm font-medium text-blue-600 uppercase tracking-wide">Step 3</span>
+                </div>
+                <h3 className="text-2xl font-medium text-gray-900 mb-4">Get Stack-Specific Solutions</h3>
+                <p className="text-gray-600 leading-relaxed font-mono">
+                  Receive remediation guidance tailored to your exact tech stack. Clariseque identifies which files, configurations, and components in your environment are affected and provides step-by-step fixes you can implement immediately.
+                </p>
+              </div>
+              <div className="bg-white rounded-xl border border-gray-200 p-8">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Shield className="w-4 h-4 text-blue-600" />
+                    <span className="text-sm font-medium text-gray-900">AI Response</span>
+                  </div>
+                  <div className="text-sm text-gray-600 leading-relaxed">
+                    <p className="mb-3">Based on your <span className="font-medium text-gray-900">Next.js + PostgreSQL</span> stack:</p>
+                    <div className="space-y-2">
+                      <div className="flex items-start gap-2">
+                        <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-xs text-green-600">✓</span>
+                        </div>
+                        <span>Update <code className="bg-gray-100 px-1 rounded text-xs font-mono">pg</code> package to v8.11.0+</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-xs text-green-600">✓</span>
+                        </div>
+                        <span>Add parameterized queries in <code className="bg-gray-100 px-1 rounded text-xs font-mono">/lib/db.ts</code></span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <div className="w-5 h-5 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-xs text-green-600">✓</span>
+                        </div>
+                        <span>Enable SSL in connection config</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* API Section */}
-      {/* <section className="py-24 px-6 lg:px-8" id="api">
-        <div className="max-w-6xl mx-auto">
-          <div className="max-w-3xl">
-            <h2 className="text-3xl font-normal mb-6 text-gray-900">Developer-first design</h2>
-            <p className="text-xl text-gray-600 leading-relaxed font-light mb-8">
-              Integrate VulnVerify into your existing workflows. Automatically surface and explain vulnerabilities in pull requests, CI/CD pipelines, and security dashboards.
-            </p>
-            <button className="text-blue-600 font-medium hover:underline inline-flex items-center gap-2">
-              Explore the API <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      </section> */}
-
       {/* Footer */}
-      <footer className="border-t border-gray-200 py-16 px-6 lg:px-8">
+      <footer className="border-t border-gray-200 py-12 px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-12 mb-12">
-            <div>
-              <h3 className="font-medium mb-4 text-gray-900 text-sm">Product</h3>
-              <ul className="space-y-3 text-sm text-gray-600">
-                <li><a href="#" className="hover:text-gray-900 transition-colors">Features</a></li>
-                {/* <li><a href="#" className="hover:text-gray-900 transition-colors">API</a></li> */}
-              </ul>
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center space-x-2">
+              <Shield className="w-5 h-5 text-blue-600" strokeWidth={2} />
+              <span className="text-sm font-medium text-gray-900">Clariseque</span>
             </div>
-            <div>
-              <h3 className="font-medium mb-4 text-gray-900 text-sm">Resources</h3>
-              <ul className="space-y-3 text-sm text-gray-600">
-                <li><a href="#" className="hover:text-gray-900 transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-gray-900 transition-colors">Changelog</a></li>
-                <li><a href="#" className="hover:text-gray-900 transition-colors">Documentation</a></li>
-              </ul>
+            <div className="text-sm text-gray-500">
+              © 2026 Clariseque. Made in India.
             </div>
-            <div>
-              <h3 className="font-medium mb-4 text-gray-900 text-sm">Legal</h3>
-              <ul className="space-y-3 text-sm text-gray-600">
-                <li><a href="#" className="hover:text-gray-900 transition-colors">Privacy</a></li>
-                <li><a href="#" className="hover:text-gray-900 transition-colors">Terms</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-medium mb-4 text-gray-900 text-sm">Stay informed</h3>
-              <p className="text-sm text-gray-600 mb-3">Weekly security intelligence delivered to your inbox.</p>
-              <div className="flex gap-2">
-                <input 
-                  type="email" 
-                  placeholder="Email address" 
-                  className="flex-1 bg-white border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
-                />
-                <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
-                  Subscribe
-                </button>
-              </div>
-            </div>
-          </div>
-          
-          <div className="border-t border-gray-200 pt-8 text-sm text-gray-500">
-            © 2026 VulnVerify. Made in India.
           </div>
         </div>
       </footer>
@@ -329,24 +305,3 @@ export default function Home() {
   );
 }
 
-function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
-  return (
-    <div>
-      <div className="text-blue-600 mb-4">{icon}</div>
-      <h3 className="text-base font-medium mb-2 text-gray-900">{title}</h3>
-      <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
-    </div>
-  );
-}
-
-function StepCard({ number, title, description }: { number: string, title: string, description: string }) {
-  return (
-    <div>
-      <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-lg font-medium mb-4 text-white">
-        {number}
-      </div>
-      <h3 className="text-base font-medium mb-2 text-gray-900">{title}</h3>
-      <p className="text-sm text-gray-600 leading-relaxed">{description}</p>
-    </div>
-  );
-}

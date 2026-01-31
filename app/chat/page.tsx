@@ -274,12 +274,12 @@ function OpenChatContent() {
               <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
-              <span className="text-base font-medium text-gray-900">VulnVerify</span>
+              <span className="text-base font-medium text-gray-900">Clariseque</span>
             </Link>
             {techStack && (
               <div className="hidden items-center gap-2 text-sm text-gray-600 sm:flex">
                 <span className="text-gray-400">•</span>
-                <span className="truncate max-w-[200px]">{techStack}</span>
+                <span className="truncate max-w-50">{techStack}</span>
               </div>
             )}
           </div>
@@ -320,7 +320,7 @@ function OpenChatContent() {
                 {techStack && (
                   <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 text-sm text-blue-700">
                     <span>Tech Stack:</span>
-                    <span className="font-medium">{techStack}</span>
+                    <span className="font-medium font-mono">{techStack}</span>
                   </div>
                 )}
               </div>
@@ -369,7 +369,7 @@ function OpenChatContent() {
                         networkSpeed={networkSpeed}
                       />
                     ) : (
-                      <p className="whitespace-pre-wrap break-words text-sm leading-relaxed">
+                      <p className="whitespace-pre-wrap wrap-break-words text-sm leading-relaxed">
                         {content}
                       </p>
                     )}

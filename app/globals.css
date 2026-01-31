@@ -1,7 +1,15 @@
 @import "tailwindcss";
 
-@theme {
-  --font-geist-sans: "Geist", sans-serif;
-  --font-geist-mono: "Geist Mono", monospace;
+@theme inline {
+  --font-sans: var(--font-urbanist), "Urbanist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-dm-mono), "DM Mono", ui-monospace, monospace;
+}
+
+body {
+  font-family: var(--font-urbanist), "Urbanist", ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-mono, code, pre {
+  font-family: var(--font-dm-mono), "DM Mono", ui-monospace, monospace;
 }
   

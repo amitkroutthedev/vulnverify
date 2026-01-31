@@ -1,6 +1,8 @@
-# VulnVerify
+# Clariseque
 
-An AI-powered vulnerability management platform that transforms complex CVE data into clear, actionable security insights. Built with Next.js 16, React 19, and Google's Gemini AI.
+**From Data to Decisiveness: AI-Driven Vulnerability Intelligence.**
+
+In an era of endless CVEs and constant security noise, Clariseque transforms dense technical data into clear, prioritized insights—empowering security professionals to stop triaging and start securing. Built with Next.js 16, React 19, and Google's Gemini AI.
 
 ## Features
 

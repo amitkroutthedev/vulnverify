@@ -88,20 +88,20 @@ export default function AnimatedMarkdown({
   }, [content, isStreaming, displayedText, getAnimationSpeed]);
   
   return (
-    <div className="prose prose-sm max-w-none prose-headings:font-semibold prose-p:text-[#1b3a4b] prose-code:text-[#1b3a4b] prose-pre:bg-[#f8fafc] prose-pre:text-[#1b3a4b] prose-strong:text-[#1b3a4b] prose-a:text-[#006466] prose-ul:text-[#1b3a4b] prose-ol:text-[#1b3a4b]">
+    <div className="prose prose-sm max-w-none font-sans prose-headings:font-semibold prose-p:text-gray-700 prose-code:text-gray-700 prose-pre:bg-gray-50 prose-pre:text-gray-700 prose-strong:text-gray-900 prose-a:text-blue-600 prose-ul:text-gray-700 prose-ol:text-gray-700">
       <ReactMarkdown
         components={{
           code: ({ node, inline, className, children, ...props }: any) => {
             const match = /language-(\w+)/.exec(className || "");
             return !inline && match ? (
-              <pre className="max-w-full overflow-x-auto rounded-lg bg-[#f8fafc] p-3 text-xs border border-[#002829]/20">
-                <code className={`${className} block overflow-x-auto whitespace-pre`} {...props}>
+              <pre className="max-w-full overflow-x-auto rounded-lg bg-gray-50 p-3 text-xs border border-gray-200 font-mono">
+                <code className={`${className} block overflow-x-auto whitespace-pre font-mono`} {...props}>
                   {children}
                 </code>
               </pre>
             ) : (
               <code
-                className="rounded bg-[#006466]/10 px-1.5 py-0.5 text-[10px] font-mono text-[#006466]"
+                className="rounded bg-blue-50 px-1.5 py-0.5 text-[10px] font-mono text-blue-700"
                 {...props}
               >
                 {children}
@@ -142,7 +142,7 @@ export default function AnimatedMarkdown({
             </h3>
           ),
           blockquote: ({ children }: any) => (
-            <blockquote className="my-2 wrap-break-word border-l-4 border-[#006466]/30 pl-4 text-xs italic text-[#212f45]">
+            <blockquote className="my-2 wrap-break-word border-l-4 border-blue-300 pl-4 text-xs italic text-gray-600">
               {children}
             </blockquote>
           ),
@@ -151,7 +151,7 @@ export default function AnimatedMarkdown({
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="wrap-break-word text-xs text-[#006466] underline hover:text-[#005052]"
+              className="wrap-break-word text-xs text-blue-600 underline hover:text-blue-700"
             >
               {children}
             </a>
@@ -161,7 +161,7 @@ export default function AnimatedMarkdown({
         {displayedText}
       </ReactMarkdown>
       {isStreaming && displayedText.length < content.length && (
-        <span className="inline-block w-2 h-4 ml-1 bg-[#006466] animate-pulse" />
+        <span className="inline-block w-2 h-4 ml-1 bg-blue-600 animate-pulse" />
       )}
     </div>
   );
