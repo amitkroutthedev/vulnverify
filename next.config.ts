@@ -32,7 +32,8 @@ const nextConfig: NextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://clerk.com https://*.clerk.accounts.dev https://*.akrout.dev",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://clerk.com https://*.clerk.accounts.dev https://*.akrout.dev",
+              "worker-src 'self' blob:",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: blob: https://*.clerk.com https://img.clerk.com https://*.akrout.dev",
               "font-src 'self' https://fonts.gstatic.com",
@@ -41,7 +42,7 @@ const nextConfig: NextConfig = {
               "frame-ancestors 'none'",
             ].join("; "),
           },
-          // Permissions-Policy - Controls browser features
+          // Permissions-Policy - Controls browser features   
           {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=()",
