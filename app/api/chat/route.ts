@@ -1,6 +1,7 @@
 import { type UIMessage } from 'ai';
 import { auth } from '@clerk/nextjs/server';
 import { pool } from '@/lib/db';
+import { checkChatRateLimit } from '@/lib/ratelimit';
 
 // Helper function to extract text content from UIMessage
 function extractMessageContent(message: UIMessage): string {
@@ -11,26 +12,37 @@ function extractMessageContent(message: UIMessage): string {
       .map((p: any) => p.text || '')
       .join('');
   }
-  
+
   return '';
 }
 
 export async function POST(req: Request) {
   try {
-    const { messages, techStack, chatId }: { 
-      messages: UIMessage[]; 
+    const { messages, techStack, chatId }: {
+      messages: UIMessage[];
       techStack?: string;
       chatId?: string;
     } = await req.json();
 
     const { userId } = await auth();
+    const rateLimitKey = userId ?? req.headers.get('x-forwarded-for') ?? 'anonymous';
+    const { success, reset } = await checkChatRateLimit(rateLimitKey)
+     if (!success) {
+      return Response.json(
+        { error: 'Too many requests. Please slow down and try again shortly.' },
+        {
+          status: 429,
+          headers: { 'Retry-After': Math.ceil((reset - Date.now()) / 1000).toString() },
+        }
+      );
+    }
 
     // Save user message to database if chatId is provided
     if (chatId && userId) {
       const lastUserMessage = messages[messages.length - 1];
       if (lastUserMessage && lastUserMessage.role === 'user') {
         const content = extractMessageContent(lastUserMessage);
-        
+
         if (content.trim()) {
           // Save user message with proper error handling
           pool.query(
@@ -66,7 +78,13 @@ export async function POST(req: Request) {
     return generateChatResponse(messages, techStack);
   } catch (error: any) {
     console.error('[Chat API] Error in POST handler:', error);
-    throw error;
+    const isTimeout = error?.name === "AbortError" || /timeout/i.test(error?.message ?? '');
+    const status = isTimeout ? 504 : 502;
+    const message = isTimeout
+      ? 'The AI model timed out. Please try again.'
+      : 'Something went wrong generating a response. Please try again.';
+
+    return Response.json({ error: message }, { status })
   }
 }
 

@@ -1,0 +1,6 @@
+{
+  "name": "clariseque-worker",
+  "private": true,
+  "scripts": { "start": "tsx src/index.ts" },
+  "dependencies": { "pg": "^8.17.1", "tsx": "^4" }
+}

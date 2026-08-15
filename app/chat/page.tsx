@@ -6,7 +6,9 @@ import { useState, useRef, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { UserButton, useUser } from "@clerk/nextjs";
-import AnimatedMarkdown, { type NetworkInfo } from "../../components/AnimatedMarkdown";
+import AnimatedMarkdown, {
+  type NetworkInfo,
+} from "../../components/AnimatedMarkdown";
 import { useRouter } from "next/navigation";
 
 interface DbMessage {
@@ -18,27 +20,32 @@ interface DbMessage {
 
 // Network speed detection - only runs on client
 function detectNetworkSpeed(): NetworkInfo {
-  if (typeof window === 'undefined') {
-    return { speed: 'medium' };
+  if (typeof window === "undefined") {
+    return { speed: "medium" };
   }
-  
-  const connection = (navigator as any).connection || 
-                    (navigator as any).mozConnection || 
-                    (navigator as any).webkitConnection;
-  
+
+  const connection =
+    (navigator as any).connection ||
+    (navigator as any).mozConnection ||
+    (navigator as any).webkitConnection;
+
   if (connection) {
     const { effectiveType, downlink, rtt } = connection;
-    
-    if (effectiveType === 'slow-2g' || effectiveType === '2g' || (downlink && downlink < 0.5)) {
-      return { speed: 'slow', effectiveType, downlink, rtt };
-    } else if (effectiveType === '3g' || (downlink && downlink < 2)) {
-      return { speed: 'medium', effectiveType, downlink, rtt };
+
+    if (
+      effectiveType === "slow-2g" ||
+      effectiveType === "2g" ||
+      (downlink && downlink < 0.5)
+    ) {
+      return { speed: "slow", effectiveType, downlink, rtt };
+    } else if (effectiveType === "3g" || (downlink && downlink < 2)) {
+      return { speed: "medium", effectiveType, downlink, rtt };
     } else {
-      return { speed: 'fast', effectiveType, downlink, rtt };
+      return { speed: "fast", effectiveType, downlink, rtt };
     }
   }
-  
-  return { speed: 'medium' };
+
+  return { speed: "medium" };
 }
 
 function OpenChatContent() {
@@ -53,17 +60,20 @@ function OpenChatContent() {
   const techStack = searchParams.get("techStack") || loadedTechStack || "";
   const urlChatId = searchParams.get("chatId");
   const router = useRouter();
-  
+  const lastSentTextRef = useRef<string>("");
+
   // Network speed detection
-  const [networkSpeed, setNetworkSpeed] = useState<NetworkInfo>(() => detectNetworkSpeed());
-  
+  const [networkSpeed, setNetworkSpeed] = useState<NetworkInfo>(() =>
+    detectNetworkSpeed(),
+  );
+
   // Redirect to /openchat if no techStack and no chatId
   useEffect(() => {
     if (isLoaded && !searchParams.get("techStack") && !urlChatId) {
-      router.push('/openchat');
+      router.push("/openchat");
     }
   }, [isLoaded, searchParams, urlChatId, router]);
-  
+
   // Monitor network speed changes
   useEffect(() => {
     const connection = (navigator as any).connection;
@@ -71,9 +81,9 @@ function OpenChatContent() {
       const updateNetworkSpeed = () => {
         setNetworkSpeed(detectNetworkSpeed());
       };
-      
-      connection.addEventListener('change', updateNetworkSpeed);
-      return () => connection.removeEventListener('change', updateNetworkSpeed);
+
+      connection.addEventListener("change", updateNetworkSpeed);
+      return () => connection.removeEventListener("change", updateNetworkSpeed);
     }
   }, []);
 
@@ -84,7 +94,7 @@ function OpenChatContent() {
       setChatId(urlChatId);
       return;
     }
-    
+
     // Create new chat if tech stack is provided and no chatId exists
     if (isLoaded && user && techStack && !chatId && !urlChatId) {
       // Create new chat if tech stack is provided
@@ -104,12 +114,16 @@ function OpenChatContent() {
             setChatId(data.chat.id);
             // Update URL with chatId for future reference
             const params = new URLSearchParams(window.location.search);
-            params.set('chatId', data.chat.id);
-            window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+            params.set("chatId", data.chat.id);
+            window.history.replaceState(
+              {},
+              "",
+              `${window.location.pathname}?${params.toString()}`,
+            );
           }
         })
         .catch((error) => {
-          console.error('Failed to create chat:', error);
+          console.error("Failed to create chat:", error);
         });
     }
   }, [isLoaded, user, techStack, chatId, urlChatId]);
@@ -125,37 +139,37 @@ function OpenChatContent() {
     });
   }, [techStack, chatId]);
 
-  const { messages, sendMessage, status, setMessages } = useChat({
+  const { messages, sendMessage, status, setMessages, error } = useChat({
     // Use chatId as the key to force hook re-initialization when chatId changes
-    id: chatId || 'new-chat',
+    id: chatId || "new-chat",
     transport,
     onFinish: async (message) => {
       // The message object from onFinish wraps the actual message in a 'message' property
-      const assistantMessage = message.message || message;    //oldformat || new format
+      const assistantMessage = message.message || message; //oldformat || new format
       const role = assistantMessage.role;
-      
-      if (chatId && role === 'assistant') {
+
+      if (chatId && role === "assistant") {
         const content = getMessageText(assistantMessage);
-        
+
         if (content.trim()) {
           try {
             const response = await fetch(`/api/chats/${chatId}/messages`, {
-              method: 'POST',
+              method: "POST",
               headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                role: 'assistant',
+                role: "assistant",
                 content: content,
               }),
             });
-            
+
             if (!response.ok) {
               const error = await response.json();
-              console.error('Failed to save assistant message:', error);
+              console.error("Failed to save assistant message:", error);
             }
           } catch (error) {
-            console.error('Error saving assistant message:', error);
+            console.error("Error saving assistant message:", error);
           }
         }
       }
@@ -165,11 +179,12 @@ function OpenChatContent() {
   // Fetch chat details and messages when chatId is available
   useEffect(() => {
     const fetchChatData = async () => {
-      if (!chatId || !isLoaded || !user || messagesLoaded || loadingMessages) return;
-      
+      if (!chatId || !isLoaded || !user || messagesLoaded || loadingMessages)
+        return;
+
       try {
         setLoadingMessages(true);
-        
+
         // Fetch chat details to get techStack if not in URL
         if (!searchParams.get("techStack")) {
           const chatResponse = await fetch(`/api/chats/${chatId}`);
@@ -180,20 +195,20 @@ function OpenChatContent() {
             }
           }
         }
-        
+
         // Fetch messages
         const messagesResponse = await fetch(`/api/chats/${chatId}/messages`);
         if (messagesResponse.ok) {
           const data = await messagesResponse.json();
           const dbMessages: DbMessage[] = data.messages || [];
-          
+
           // Convert database messages to UIMessage format
           const uiMessages: UIMessage[] = dbMessages.map((msg) => ({
             id: msg.id,
-            role: msg.role as 'user' | 'assistant',
-            parts: [{ type: 'text', text: msg.content }],
+            role: msg.role as "user" | "assistant",
+            parts: [{ type: "text", text: msg.content }],
           }));
-          
+
           // Set messages in useChat hook
           if (uiMessages.length > 0 && setMessages) {
             setMessages(uiMessages);
@@ -201,7 +216,7 @@ function OpenChatContent() {
           setMessagesLoaded(true);
         }
       } catch (error) {
-        console.error('Error fetching chat data:', error);
+        console.error("Error fetching chat data:", error);
       } finally {
         setLoadingMessages(false);
       }
@@ -210,7 +225,7 @@ function OpenChatContent() {
     if (chatId) {
       fetchChatData();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatId, isLoaded, user, messagesLoaded]);
 
   const isLoading = status === "streaming" || status === "submitted";
@@ -226,17 +241,23 @@ function OpenChatContent() {
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
-    
+
     // Ensure chatId is set before sending (if techStack is provided)
     if (techStack && !chatId && !urlChatId) {
-      console.warn('ChatId not set yet, waiting for chat creation...');
+      console.warn("ChatId not set yet, waiting for chat creation...");
       return;
     }
 
+    lastSentTextRef.current = input.trim();
     sendMessage({
       parts: [{ type: "text", text: input.trim() }],
     });
     setInput("");
+  };
+
+  const handleRetry = () => {
+    if (!lastSentTextRef.current || isLoading) return;
+    sendMessage({ parts: [{ type: "text", text: lastSentTextRef.current }] });
   };
 
   // Helper function to extract text content from message parts
@@ -262,19 +283,38 @@ function OpenChatContent() {
               onClick={() => router.back()}
               className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 transition-colors"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
               Back
             </button>
-            <Link
-              href="/"
-              className="flex items-center gap-2"
-            >
-              <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            <Link href="/" className="flex items-center gap-2">
+              <svg
+                className="w-5 h-5 text-blue-600"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                />
               </svg>
-              <span className="text-base font-medium text-gray-900">Clariseque</span>
+              <span className="text-base font-medium text-gray-900">
+                Clariseque
+              </span>
             </Link>
             {techStack && (
               <div className="hidden items-center gap-2 text-sm text-gray-600 sm:flex">
@@ -286,17 +326,22 @@ function OpenChatContent() {
           <div className="flex items-center gap-6">
             {/* Network speed indicator */}
             <div className="hidden items-center gap-1.5 text-xs text-gray-500 sm:flex">
-              <div className={`h-2 w-2 rounded-full ${
-                networkSpeed.speed === 'fast' ? 'bg-green-500' :
-                networkSpeed.speed === 'medium' ? 'bg-yellow-500' : 'bg-red-500'
-              }`} />
+              <div
+                className={`h-2 w-2 rounded-full ${
+                  networkSpeed.speed === "fast"
+                    ? "bg-green-500"
+                    : networkSpeed.speed === "medium"
+                      ? "bg-yellow-500"
+                      : "bg-red-500"
+                }`}
+              />
               <span className="capitalize">{networkSpeed.speed}</span>
             </div>
             <UserButton />
           </div>
         </div>
       </header>
-  
+
       {/* Messages Container */}
       <div className="flex-1 overflow-y-auto px-6 py-8 bg-gray-50">
         <div className="mx-auto max-w-4xl space-y-6">
@@ -310,7 +355,9 @@ function OpenChatContent() {
             <div className="flex h-full items-center justify-center">
               <div className="text-center">
                 <h2 className="mb-2 text-2xl font-normal text-gray-900">
-                  {techStack ? "Security Auditor Ready" : "Start Security Analysis"}
+                  {techStack
+                    ? "Security Auditor Ready"
+                    : "Start Security Analysis"}
                 </h2>
                 <p className="text-gray-600">
                   {techStack
@@ -329,8 +376,11 @@ function OpenChatContent() {
             messages.map((message) => {
               const role = getMessageRole(message);
               const content = getMessageText(message);
-              const isStreamingMessage = isLoading && role === 'assistant' && message === messages[messages.length - 1];
-              
+              const isStreamingMessage =
+                isLoading &&
+                role === "assistant" &&
+                message === messages[messages.length - 1];
+
               return (
                 <div
                   key={message.id}
@@ -363,8 +413,8 @@ function OpenChatContent() {
                     }`}
                   >
                     {role === "assistant" ? (
-                      <AnimatedMarkdown 
-                        content={content} 
+                      <AnimatedMarkdown
+                        content={content}
                         isStreaming={isStreamingMessage}
                         networkSpeed={networkSpeed}
                       />
@@ -375,9 +425,7 @@ function OpenChatContent() {
                     )}
                     <p
                       className={`mt-2 text-xs ${
-                        role === "user"
-                          ? "text-white/70"
-                          : "text-gray-500"
+                        role === "user" ? "text-white/70" : "text-gray-500"
                       }`}
                     >
                       {new Date().toLocaleTimeString([], {
@@ -407,38 +455,53 @@ function OpenChatContent() {
               );
             })
           )}
-          {isLoading && messages.length > 0 && messages[messages.length - 1]?.role !== 'assistant' && (
-            <div className="flex gap-4 justify-start">
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100">
-                <svg
-                  className="h-4 w-4 text-blue-600"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                  />
-                </svg>
-              </div>
-              <div className="rounded-lg bg-white px-4 py-3 border border-gray-200">
-                <div className="flex gap-1">
-                  <div className="h-2 w-2 animate-bounce rounded-full bg-blue-600 [animation-delay:-0.3s]"></div>
-                  <div className="h-2 w-2 animate-bounce rounded-full bg-blue-600 [animation-delay:-0.15s]"></div>
-                  <div className="h-2 w-2 animate-bounce rounded-full bg-blue-600"></div>
+          {isLoading &&
+            messages.length > 0 &&
+            messages[messages.length - 1]?.role !== "assistant" && (
+              <div className="flex gap-4 justify-start">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100">
+                  <svg
+                    className="h-4 w-4 text-blue-600"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                    />
+                  </svg>
+                </div>
+                <div className="rounded-lg bg-white px-4 py-3 border border-gray-200">
+                  <div className="flex gap-1">
+                    <div className="h-2 w-2 animate-bounce rounded-full bg-blue-600 [animation-delay:-0.3s]"></div>
+                    <div className="h-2 w-2 animate-bounce rounded-full bg-blue-600 [animation-delay:-0.15s]"></div>
+                    <div className="h-2 w-2 animate-bounce rounded-full bg-blue-600"></div>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
           <div ref={messagesEndRef} />
         </div>
       </div>
-  
+
       {/* Input Area */}
       <div className="border-t border-gray-200 bg-white px-6 py-4">
+        {error && (
+          <div className="mx-auto mb-3 flex max-w-4xl items-center justify-between rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            <span>
+              {error.message || "Something went wrong. Please try again."}
+            </span>
+            <button
+              onClick={handleRetry}
+              className="ml-4 rounded-md bg-red-600 px-3 py-1 text-xs font-medium text-white hover:bg-red-700"
+            >
+              Retry
+            </button>
+          </div>
+        )}
         <form onSubmit={handleSend} className="mx-auto max-w-4xl">
           <div className="flex gap-3">
             <input
